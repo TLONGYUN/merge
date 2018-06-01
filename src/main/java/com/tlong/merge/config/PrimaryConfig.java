@@ -28,7 +28,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactoryPrimary",//配置连接工厂 entityManagerFactory
         transactionManagerRef = "transactionManagerPrimary", //配置 事物管理器  transactionManager
-        basePackages = {"com.tlong.merge.repository.test1"}//设置dao（repo）所在位置
+        basePackages = {"com.tlong.merge.repository.primary"}//设置dao（repo）所在位置
 )
 public class PrimaryConfig {
 
@@ -55,7 +55,7 @@ public class PrimaryConfig {
                 //设置数据源属性
                 .properties(getVendorProperties(primaryDataSource))
                 //设置实体类所在位置.扫描所有带有 @Entity 注解的类
-                .packages("com.tlong.merge.domain")
+                .packages("com.tlong.merge.domain.primary")
                 // Spring会将EntityManagerFactory注入到Repository之中.有了 EntityManagerFactory之后,
                 // Repository就能用它来创建 EntityManager 了,然后Entity就可以针对数据库执行操作
                 .persistenceUnit("primaryPersistenceUnit")

@@ -1,8 +1,8 @@
 package com.tlong.merge;
 
-import com.tlong.merge.domain.TlongUser;
-import com.tlong.merge.repository.test1.UserTest1Repository;
-import com.tlong.merge.repository.test2.UserTest2Repository;
+import com.tlong.merge.domain.secondary.TlongUser;
+import com.tlong.merge.repository.primary.UserTest1Repository;
+import com.tlong.merge.repository.secondary.UserTest2Repository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -29,9 +29,17 @@ public class MergeApplicationTests {
 	public void contextLoads() {
 	}
 
+	/**
+	 * 	**********所有方法需要在这里记录*************
+	 * 	  方法名称		执行状态  	  执行目的
+	 * testFindALL    执行通过完成   测试查询所有的数据
+	 */
+
+
+
 	@Test
 	public void testFindAll(){
-		List<TlongUser> all = userTest1Repository.findAll();
+		List<com.tlong.merge.domain.primary.TlongUser> all = userTest1Repository.findAll();
 		logger.warn(all.size()+"$$$$$$$$$$$$$$$$$$");
 
 		List<TlongUser> all1 = userTest2Repository.findAll();

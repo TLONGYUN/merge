@@ -1,4 +1,4 @@
-package com.tlong.merge.domain;
+package com.tlong.merge.domain.secondary;
 
 import org.hibernate.annotations.DynamicUpdate;
 

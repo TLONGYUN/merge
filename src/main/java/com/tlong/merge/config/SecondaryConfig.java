@@ -25,7 +25,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef="entityManagerFactorySecondary",
         transactionManagerRef="transactionManagerSecondary",
-        basePackages= { "com.tlong.merge.repository.test2" })
+        basePackages= {"com.tlong.merge.repository.secondary"})
 public class SecondaryConfig {
 
     @Autowired
@@ -47,7 +47,7 @@ public class SecondaryConfig {
         return builder
                 .dataSource(secondaryDataSource)
                 .properties(getVendorProperties(secondaryDataSource))
-                .packages("com.tlong.merge.domain")
+                .packages("com.tlong.merge.domain.secondary")
                 .persistenceUnit("secondaryPersistenceUnit")
                 .build();
     }

@@ -1,6 +1,6 @@
-package com.tlong.merge.repository.test2;
+package com.tlong.merge.repository.secondary;
 
-import com.tlong.merge.domain.TlongUser;
+import com.tlong.merge.domain.secondary.TlongUser;
 import com.tlong.merge.repository.BaseRepository;
 
 /**

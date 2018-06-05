@@ -46,10 +46,10 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/springloaded -->
 		<!--配置idea自动加载配置文件-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>springloaded</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework</groupId>-->
+			<!--<artifactId>springloaded</artifactId>-->
+		<!--</dependency>-->
 		<!-- Spring Boot的开发者工具采取了库的形式 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -57,12 +57,12 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.16.18</version>
-			<scope>provided</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.projectlombok</groupId>-->
+			<!--<artifactId>lombok</artifactId>-->
+			<!--<version>1.16.18</version>-->
+			<!--<scope>provided</scope>-->
+		<!--</dependency>-->
 
 		<!--Start query dsl依赖 -->
 		<dependency>

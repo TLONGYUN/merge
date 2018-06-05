@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Map;
 
@@ -39,6 +40,11 @@ public class PrimaryConfig {
     @Qualifier("primaryDataSource")
     private DataSource primaryDataSource;
 
+
+     @Bean(name = "entityManagerPrimary")
+     public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
+         return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+     }
 
     /**
      *

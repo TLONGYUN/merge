@@ -1,5 +1,2 @@
 # merge
-
-迁移代码所有执行方法放到 MergeApplicationTests.java中
-
-primary为主数据库为新数据库对应tlong    secondary为老版本数据库
+技术实现: sb1.5.4下 配置多数据源并使用sbJPA+QueryDSL来处理数据

@@ -9,3 +9,4 @@ import com.tlong.merge.repository.BaseRepository;
  */
 public interface LongshiOrgRepository extends BaseRepository<LongshiOrg,String> {
 }
+

@@ -2,6 +2,7 @@ package com.tlong.merge.domain.primary;
 
 import javax.persistence.*;
 import javax.xml.crypto.Data;
+import java.util.Date;
 
 @Entity
 @Table(name = "tlong_about")
@@ -21,7 +22,10 @@ public class TlongAbout {
     private String userName;
 
     //上传时间
-    private Data publishTime;
+    private Date publishTime;
+
+    //状态
+    private Integer state;
 
     public Long getId() {
         return id;
@@ -55,11 +59,19 @@ public class TlongAbout {
         this.userName = userName;
     }
 
-    public Data getPublishTime() {
+    public Date getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(Data publishTime) {
+    public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

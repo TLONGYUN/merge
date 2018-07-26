@@ -3,7 +3,7 @@ package com.tlong.merge.domain.secondary;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.xml.crypto.Data;
+import java.util.Date;
 
 @Entity
 @Table(name = "zjxx_jp_manager")
@@ -34,13 +34,13 @@ public class ZjxxJpManager {
     private String orgId;
 
     //注册时间
-    private Data rTime;
+    private Date rTime;
 
     //登录标志
     private String token;
 
     //产生token时间
-    private Data tTime;
+    private Date tTime;
 
     public String getId() {
         return id;
@@ -106,11 +106,11 @@ public class ZjxxJpManager {
         this.orgId = orgId;
     }
 
-    public Data getrTime() {
+    public Date getrTime() {
         return rTime;
     }
 
-    public void setrTime(Data rTime) {
+    public void setrTime(Date rTime) {
         this.rTime = rTime;
     }
 
@@ -122,11 +122,11 @@ public class ZjxxJpManager {
         this.token = token;
     }
 
-    public Data gettTime() {
+    public Date gettTime() {
         return tTime;
     }
 
-    public void settTime(Data tTime) {
+    public void settTime(Date tTime) {
         this.tTime = tTime;
     }
 }

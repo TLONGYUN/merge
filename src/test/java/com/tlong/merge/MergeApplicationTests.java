@@ -2,17 +2,16 @@ package com.tlong.merge;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.tlong.merge.domain.primary.TlongAbout;
+import com.tlong.merge.domain.primary.TlongGoods;
 import com.tlong.merge.domain.primary.TlongOrg;
 import com.tlong.merge.domain.primary.TlongUser;
-import com.tlong.merge.domain.secondary.LongshiOrg;
-import com.tlong.merge.domain.secondary.ZjxxJpPeople;
-import com.tlong.merge.domain.secondary.ZjxxPeople;
+import com.tlong.merge.domain.secondary.*;
+import com.tlong.merge.repository.primary.TlongAboutRepository;
+import com.tlong.merge.repository.primary.TlongGoodsRepository;
 import com.tlong.merge.repository.primary.TlongOrgRepository;
 import com.tlong.merge.repository.primary.UserTest1Repository;
-import com.tlong.merge.repository.secondary.LongshiOrgRepository;
-import com.tlong.merge.repository.secondary.ZjxxJpManagerRepository;
-import com.tlong.merge.repository.secondary.ZjxxJpPeopleRepository;
-import com.tlong.merge.repository.secondary.ZjxxPeopleRepository;
+import com.tlong.merge.repository.secondary.*;
 import com.tlong.merge.utils.ToListUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,9 +34,13 @@ import static com.tlong.merge.domain.secondary.QZjxxJpPeople.zjxxJpPeople;
 import static com.tlong.merge.domain.secondary.QZjxxPeople.zjxxPeople;
 import static com.tlong.merge.domain.secondary.QLongshiOrg.longshiOrg;
 import static com.tlong.merge.domain.secondary.QZjxxJpManager.zjxxJpManager;
+import static com.tlong.merge.domain.secondary.QZjxxAboutlongshi.zjxxAboutlongshi;
+import static com.tlong.merge.domain.secondary.QZjxxCommodity.zjxxCommodity;
 
 import static com.tlong.merge.domain.primary.QTlongUser.tlongUser;
 import static com.tlong.merge.domain.primary.QTlongOrg.tlongOrg;
+import static com.tlong.merge.domain.primary.QTlongAbout.tlongAbout;
+import static com.tlong.merge.domain.primary.QTlongGoods.tlongGoods;
 
 
 
@@ -57,9 +60,16 @@ public class MergeApplicationTests {
 	private TlongOrgRepository tlongOrgRepository;
 	@Resource
 	private ZjxxJpPeopleRepository zjxxJpPeopleRepository;
-
 	@Resource
 	private ZjxxJpManagerRepository zjxxJpManagerRepository;
+    @Resource
+    private ZjxxAboutlongshiRepository zjxxAboutlongshiRepository;
+    @Resource
+    private TlongAboutRepository tlongAboutRepository;
+    @Resource
+    private ZjxxCommodityRepository zjxxCommodityRepository;
+    @Resource
+    private TlongGoodsRepository tlongGoodsRepository;
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -187,7 +197,69 @@ public class MergeApplicationTests {
      */
     @Test
     public void findAllAbout(){
+        List<ZjxxAboutlongshi> all = zjxxAboutlongshiRepository.findAll();
+        List<TlongAbout> newList = new ArrayList<>();
+        all.stream().forEach(one ->{
+            TlongAbout tlongAbout = new TlongAbout();
+            tlongAbout.setTitle(one.getTitle());
+            tlongAbout.setContent(one.getAcontent());
+            tlongAbout.setUserName(one.getAuthor());
+            tlongAbout.setState(1);
+            newList.add(tlongAbout);
+        });
+        tlongAboutRepository.save(newList);
+    }
 
+    /**
+     * 商品
+     */
+    @Test
+    public void findAllGoods(){
+        List<ZjxxCommodity> all = zjxxCommodityRepository.findAll();
+        List<TlongGoods> newList = new ArrayList<>();
+        all.stream().forEach(one ->{
+            TlongGoods tlongGoods = new TlongGoods();
+            tlongGoods.setGoodsHead(one.getTitle());
+            tlongGoods.setGoodsCode(one.getNumber());
+            //TODO 设置发布人ID需要去用户表查询该用户id然后赋值
+//            tlongGoods.setPublishUserId(one.getCpeopleid());
+            //TODO 设置商品分类需要去分类表查询分类id
+//            tlongGoods.setGoodsClassId(one.getCltype());
+            tlongGoods.setState(one.getChecked());
+            tlongGoods.setDes(one.getIntroduction());
+            tlongGoods.setDes(one.getInformation());
+            tlongGoods.setStar(one.getStar());
+            //TODO 真实星级 字符串还是用整形
+//            tlongGoods.setRealStar(one.getStarreal());
+            tlongGoods.setPublishClass(one.getUploadtype());
+            tlongGoods.setVideo(one.getCvideo());
+            tlongGoods.setCertificate(one.getCcertificate());
+            tlongGoods.setGoodsPic(one.getCpicture());
+            //TODO 图片类型是多个还是单个 数据类型用String还是Int
+//            tlongGoods.setPicType(one.getPicturetype());
+            //TODO 圈口大小 INT String
+//            tlongGoods.setCircle(one.getRingsize());
+            tlongGoods.setTheme(one.getTheme());
+            tlongGoods.setStyle(one.getStyle());
+            tlongGoods.setKindOfWater(one.getZhongshui());
+            tlongGoods.setColor(one.getColor());
+            tlongGoods.setFactoryPrice(Double.valueOf(one.getPrice4()));
+            tlongGoods.setFounderPrice(Double.valueOf(one.getPrice1()));
+            tlongGoods.setFlagshipPrice(Double.valueOf(one.getPrice2()));
+            tlongGoods.setStorePrice(Double.valueOf(one.getPrice3()));
+            tlongGoods.setPublishPrice(Double.valueOf(one.getPrice0()));
+            tlongGoods.setPriceRange(one.getPricerang());
+            tlongGoods.setNum(Integer.valueOf(one.getCount()));
+            tlongGoods.setPriceType(Integer.valueOf(one.getPricetype()));
+            tlongGoods.setWx(one.getServiceweixin());
+            tlongGoods.setPhoneService(one.getServicephone());
+            //TODO 发布时间老数据有问题看数据库
+//            tlongGoods.setPublishTime(one.getNewstime());
+            tlongGoods.setCurState(1);
+            tlongGoods.setIsDeleted(0);
+            newList.add(tlongGoods);
+        });
+        tlongGoodsRepository.save(newList);
     }
 
 }

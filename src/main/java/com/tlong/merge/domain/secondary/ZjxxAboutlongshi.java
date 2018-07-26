@@ -15,10 +15,40 @@ public class ZjxxAboutlongshi {
     private String title;
 
     //内容
-    private String content;
+    private String acontent;
 
     //作者
     private String author;
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAcontent() {
+        return acontent;
+    }
+
+    public void setAcontent(String acontent) {
+        this.acontent = acontent;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

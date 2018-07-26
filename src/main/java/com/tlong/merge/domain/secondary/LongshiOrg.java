@@ -51,7 +51,7 @@ public class LongshiOrg {
     private String orgPhone;
 
     //是否删除
-    private Boolean isdelete;
+    private Integer isdelete;
 
     public String getId() {
         return id;
@@ -141,11 +141,11 @@ public class LongshiOrg {
         this.orgPhone = orgPhone;
     }
 
-    public Boolean getIsdelete() {
+    public Integer getIsdelete() {
         return isdelete;
     }
 
-    public void setIsdelete(Boolean isdelete) {
+    public void setIsdelete(Integer isdelete) {
         this.isdelete = isdelete;
     }
 }

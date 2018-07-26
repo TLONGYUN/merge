@@ -182,4 +182,12 @@ public class MergeApplicationTests {
     public void findAllUser(){
     }
 
+    /**
+     * 关于天珑
+     */
+    @Test
+    public void findAllAbout(){
+
+    }
+
 }

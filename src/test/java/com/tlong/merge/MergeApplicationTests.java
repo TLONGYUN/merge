@@ -2,15 +2,9 @@ package com.tlong.merge;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tlong.merge.domain.primary.TlongAbout;
-import com.tlong.merge.domain.primary.TlongGoods;
-import com.tlong.merge.domain.primary.TlongOrg;
-import com.tlong.merge.domain.primary.TlongUser;
+import com.tlong.merge.domain.primary.*;
 import com.tlong.merge.domain.secondary.*;
-import com.tlong.merge.repository.primary.TlongAboutRepository;
-import com.tlong.merge.repository.primary.TlongGoodsRepository;
-import com.tlong.merge.repository.primary.TlongOrgRepository;
-import com.tlong.merge.repository.primary.UserTest1Repository;
+import com.tlong.merge.repository.primary.*;
 import com.tlong.merge.repository.secondary.*;
 import com.tlong.merge.utils.ToListUtil;
 import org.junit.Test;
@@ -27,8 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.tlong.merge.domain.secondary.QZjxxJpPeople.zjxxJpPeople;
 import static com.tlong.merge.domain.secondary.QZjxxPeople.zjxxPeople;
@@ -36,11 +29,13 @@ import static com.tlong.merge.domain.secondary.QLongshiOrg.longshiOrg;
 import static com.tlong.merge.domain.secondary.QZjxxJpManager.zjxxJpManager;
 import static com.tlong.merge.domain.secondary.QZjxxAboutlongshi.zjxxAboutlongshi;
 import static com.tlong.merge.domain.secondary.QZjxxCommodity.zjxxCommodity;
+import static com.tlong.merge.domain.secondary.QZjxxCommoditytype.zjxxCommoditytype;
 
 import static com.tlong.merge.domain.primary.QTlongUser.tlongUser;
 import static com.tlong.merge.domain.primary.QTlongOrg.tlongOrg;
 import static com.tlong.merge.domain.primary.QTlongAbout.tlongAbout;
 import static com.tlong.merge.domain.primary.QTlongGoods.tlongGoods;
+import static com.tlong.merge.domain.primary.QAppGoodsclass.appGoodsclass;
 
 
 
@@ -70,6 +65,10 @@ public class MergeApplicationTests {
     private ZjxxCommodityRepository zjxxCommodityRepository;
     @Resource
     private TlongGoodsRepository tlongGoodsRepository;
+    @Resource
+    private AppGoodsclassRepository appGoodsclassRepository;
+    @Resource
+    private ZjxxCommoditytypeRepository zjxxCommoditytypeRepository;
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -190,6 +189,7 @@ public class MergeApplicationTests {
 
 	@Test
     public void findAllUser(){
+//        zjxxCommoditytypeRepository.findAll()
     }
 
     /**
@@ -211,6 +211,74 @@ public class MergeApplicationTests {
     }
 
     /**
+     * 商品分类
+     */
+    @Test
+    public void findAllGoodsClass(){
+        //先查出所有的商品一级分类
+        Iterable<ZjxxCommoditytype> ZjxxCommoditytypes = zjxxCommoditytypeRepository.findAll(zjxxCommoditytype.pid.isNull()
+        .or(zjxxCommoditytype.pid.isEmpty()));
+        List<ZjxxCommoditytype> all = ToListUtil.IterableToList(ZjxxCommoditytypes);
+        logger.info("当前一级分类共获取到:" + all.size() + "个.");
+
+        //获取以及分类对应的二级分类
+        List<String> ids = new ArrayList<>();
+        all.forEach(one -> ids.add(one.getId()));
+        Iterable<ZjxxCommoditytype> zjxxCommoditytypes = zjxxCommoditytypeRepository.findAll(zjxxCommoditytype.pid.in(ids));
+        List<ZjxxCommoditytype> all1 = ToListUtil.IterableToList(zjxxCommoditytypes);
+
+        Map<String,List<ZjxxCommoditytype>> map = new HashMap<>();
+        all1.forEach(one ->{
+            if (map.get(one.getPid()) == null){
+                ArrayList<ZjxxCommoditytype> zjxxCommoditytypes1 = new ArrayList<>();
+                zjxxCommoditytypes1.add(one);
+                map.put(one.getPid(),zjxxCommoditytypes1);
+            }else {
+                List<ZjxxCommoditytype> zjxxCommoditytypes1 = map.get(one.getPid());
+                zjxxCommoditytypes1.add(one);
+            }
+        });
+
+        //map现在是包含了   一级分类为key   所包含二级分类集合为value
+        //第一步存储一级分类id
+        List<AppGoodsclass> firstGoodsClass = new ArrayList<>();
+        all.forEach(one ->{
+            AppGoodsclass appGoodsclass = new AppGoodsclass();
+            appGoodsclass.setCurState(1);
+            appGoodsclass.setIsDeleted(0);
+            appGoodsclass.setGoodsClassLevel(1);
+            appGoodsclass.setGoodsClassName(one.getTitle());
+//            TODO 发布时间数据有问题
+//            appGoodsclass.setPublishTime(one.getNewstime());
+            firstGoodsClass.add(appGoodsclass);
+        });
+        appGoodsclassRepository.save(firstGoodsClass);
+
+        //现在存储第二级别的商品分类
+        List<AppGoodsclass> sencondGoodsClass = new ArrayList<>();
+
+        map.forEach((key,value) -> value.forEach(one ->{
+            AppGoodsclass appGoodsclass1 = new AppGoodsclass();
+            appGoodsclass1.setCurState(1);
+            appGoodsclass1.setIsDeleted(0);
+            appGoodsclass1.setGoodsClassLevel(2);
+//                TODO 发布时间有问题
+//                appGoodsclass1.setPublishTime(one.getNewstime());
+            appGoodsclass1.setGoodsClassName(one.getTitle());
+            ZjxxCommoditytype one1 = zjxxCommoditytypeRepository.findOne(zjxxCommoditytype.id.eq(key));
+            AppGoodsclass one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle()));
+            appGoodsclass1.setGoodsClassIdParent(one2.getId());
+            sencondGoodsClass.add(appGoodsclass1);
+        }));
+
+        appGoodsclassRepository.save(sencondGoodsClass);
+
+    }
+
+
+
+
+    /**
      * 商品
      */
     @Test
@@ -223,8 +291,10 @@ public class MergeApplicationTests {
             tlongGoods.setGoodsCode(one.getNumber());
             //TODO 设置发布人ID需要去用户表查询该用户id然后赋值
 //            tlongGoods.setPublishUserId(one.getCpeopleid());
-            //TODO 设置商品分类需要去分类表查询分类id
-//            tlongGoods.setGoodsClassId(one.getCltype());
+            //设置商品分类需要去分类表查询分类id
+            ZjxxCommoditytype one1 = zjxxCommoditytypeRepository.findOne(one.getCltype());
+            AppGoodsclass one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle()));
+            tlongGoods.setGoodsClassId(one2.getId());
             tlongGoods.setState(one.getChecked());
             tlongGoods.setDes(one.getIntroduction());
             tlongGoods.setDes(one.getInformation());
@@ -261,5 +331,6 @@ public class MergeApplicationTests {
         });
         tlongGoodsRepository.save(newList);
     }
+
 
 }

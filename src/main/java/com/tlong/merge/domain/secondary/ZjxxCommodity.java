@@ -23,6 +23,12 @@ public class ZjxxCommodity {
     //商品分类(小分类)
     private String cltype;
 
+    //商品分类(中分类)
+    private String cmtype;
+
+    //商品分类(大分类)
+    private String ctype;
+
     //审核状态(系统字段。1为已审核，0为未审核)
     private Integer checked;
 
@@ -347,5 +353,21 @@ public class ZjxxCommodity {
 
     public void setNewstime(String newstime) {
         this.newstime = newstime;
+    }
+
+    public String getCmtype() {
+        return cmtype;
+    }
+
+    public void setCmtype(String cmtype) {
+        this.cmtype = cmtype;
+    }
+
+    public String getCtype() {
+        return ctype;
+    }
+
+    public void setCtype(String ctype) {
+        this.ctype = ctype;
     }
 }

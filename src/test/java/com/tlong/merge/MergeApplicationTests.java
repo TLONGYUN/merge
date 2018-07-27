@@ -7,6 +7,7 @@ import com.tlong.merge.domain.secondary.*;
 import com.tlong.merge.repository.primary.*;
 import com.tlong.merge.repository.secondary.*;
 import com.tlong.merge.utils.ToListUtil;
+import org.assertj.core.util.Strings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -69,6 +70,10 @@ public class MergeApplicationTests {
     private AppGoodsclassRepository appGoodsclassRepository;
     @Resource
     private ZjxxCommoditytypeRepository zjxxCommoditytypeRepository;
+    @Resource
+    private ZjxxLessonRepository zjxxLessonRepository;
+    @Resource
+    private CourseRepository courseRepository;
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -291,9 +296,26 @@ public class MergeApplicationTests {
             tlongGoods.setGoodsCode(one.getNumber());
             //TODO 设置发布人ID需要去用户表查询该用户id然后赋值
 //            tlongGoods.setPublishUserId(one.getCpeopleid());
-            //设置商品分类需要去分类表查询分类id
-            ZjxxCommoditytype one1 = zjxxCommoditytypeRepository.findOne(one.getCltype());
-            AppGoodsclass one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle()));
+            //todo 设置商品分类需要去分类表查询分类id 现在的商品有的是只属于二级分类的
+            ZjxxCommoditytype one1;
+            AppGoodsclass one2;
+            if (!Strings.isNullOrEmpty(one.getCltype())){
+                logger.warn(one.getCltype());
+                one1 = zjxxCommoditytypeRepository.findOne(one.getCltype());
+                if (one1 == null){
+                    logger.warn("问题" + one.getTitle());
+                }
+                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
+                    .and(appGoodsclass.goodsClassIdParent.isNotNull()));
+            }else {
+                logger.warn(one.getCtype());
+                one1 = zjxxCommoditytypeRepository.findOne(one.getCtype());
+                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
+                        .and(appGoodsclass.goodsClassIdParent.isNull()));
+            }
+            if (one2 == null){
+                logger.warn("这个商品有问题!!!!!!!!!!!!!!!!!!!!!"+ one.getTitle());
+            }
             tlongGoods.setGoodsClassId(one2.getId());
             tlongGoods.setState(one.getChecked());
             tlongGoods.setDes(one.getIntroduction());
@@ -332,5 +354,27 @@ public class MergeApplicationTests {
         tlongGoodsRepository.save(newList);
     }
 
+
+    @Test
+    public void findAllClazz(){
+        List<ZjxxLesson> all = zjxxLessonRepository.findAll();
+        List<Course> newList = new ArrayList<>();
+        all.stream().forEach(one ->{
+            Course course = new Course();
+//            course.setStyleId(null);
+            course.setTitle(one.getTitle());
+//            TODO 课程目录跟center的数据类型不一样
+//            course.setCatalog(one.getLessonindex());
+            course.setTeacher(one.getLessonauthor());
+            course.setDes(one.getLessoninfo());
+            course.setVideo(one.getLessonvideo());
+            course.setImg(one.getLessonpicture());
+            course.setCurState(1);
+//            TODO 发布时间格式不对
+//            course.setPublishTime(one.getNewstime());
+            newList.add(course);
+        });
+        courseRepository.save(newList);
+    }
 
 }

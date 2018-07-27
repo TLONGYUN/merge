@@ -94,6 +94,10 @@ public class MergeApplicationTests {
     private TsignHistoryRepository tsignHistoryRepository;
     @Resource
     private EsignRecordHistoryRepository esignRecordHistoryRepository;
+    @Resource
+    private ZjxxOrdersRepository zjxxOrdersRepository;
+    @Resource
+    private WebOrderRepository webOrderRepository;
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -524,6 +528,27 @@ public class MergeApplicationTests {
         });
         esignRecordHistoryRepository.save(newList);
 
+    }
+
+    /**
+     * 订单
+     */
+    @Test
+    public void findAllOrder(){
+        List<ZjxxOrders> all = zjxxOrdersRepository.findAll();
+        List<WebOrder> newList = new ArrayList<>();
+        all.forEach(one ->{
+            WebOrder webOrder = new WebOrder();
+//            TODO 商品id
+//            webOrder.setGoodsId(one.getCommodityid());
+//            TODO 下单时间
+//            webOrder.setPlaceOrderTime(one.getNewstime());
+            webOrder.setState(one.getOrdersstate());
+//            TODO 用户id
+//            webOrder.setUserId(one.getPeopleid());
+            newList.add(webOrder);
+        });
+        webOrderRepository.save(newList);
     }
 
 }

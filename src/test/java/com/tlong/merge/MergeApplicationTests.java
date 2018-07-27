@@ -98,6 +98,11 @@ public class MergeApplicationTests {
     private ZjxxOrdersRepository zjxxOrdersRepository;
     @Resource
     private WebOrderRepository webOrderRepository;
+    @Resource
+    private MessageRepository messageRepository;
+    @Resource
+    private ZjxxMessageRepository zjxxMessageRepository;
+
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -549,6 +554,28 @@ public class MergeApplicationTests {
             newList.add(webOrder);
         });
         webOrderRepository.save(newList);
+    }
+
+    /**
+     * 消息通知
+     */
+    @Test
+    public void findAllMessage(){
+        List<ZjxxMessage> all = zjxxMessageRepository.findAll();
+        List<Message> newList = new ArrayList<>();
+        all.forEach(one ->{
+            Message message = new Message();
+            message.setState(one.getChecked());
+            message.setCurState(one.getChecked());
+            message.setIsDeleted(0);
+            message.setContent(one.getContent());
+//            TODO 发送时间
+//            message.setPublishTime(one.getNewstime());
+            message.setTitle(one.getTitle());
+            message.setUserName(one.getUsername());
+            newList.add(message);
+        });
+        messageRepository.save(newList);
     }
 
 }

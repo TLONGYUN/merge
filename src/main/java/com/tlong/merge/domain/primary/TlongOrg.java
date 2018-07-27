@@ -51,7 +51,6 @@ public class TlongOrg {
     //是否删除
     private Integer isDeleted;
 
-
     //创建时间
     private Date createDate;
 

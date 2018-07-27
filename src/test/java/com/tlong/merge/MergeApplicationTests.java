@@ -74,6 +74,11 @@ public class MergeApplicationTests {
     private ZjxxLessonRepository zjxxLessonRepository;
     @Resource
     private CourseRepository courseRepository;
+    @Resource
+    private WebSlideshowRepository webSlideshowRepository;
+    @Resource
+    private ZjxxAdRepository zjxxAdRepository;
+
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -294,29 +299,38 @@ public class MergeApplicationTests {
             TlongGoods tlongGoods = new TlongGoods();
             tlongGoods.setGoodsHead(one.getTitle());
             tlongGoods.setGoodsCode(one.getNumber());
-            //TODO 设置发布人ID需要去用户表查询该用户id然后赋值
-//            tlongGoods.setPublishUserId(one.getCpeopleid());
-            //todo 设置商品分类需要去分类表查询分类id 现在的商品有的是只属于二级分类的
-            ZjxxCommoditytype one1;
-            AppGoodsclass one2;
-            if (!Strings.isNullOrEmpty(one.getCltype())){
-                logger.warn(one.getCltype());
-                one1 = zjxxCommoditytypeRepository.findOne(one.getCltype());
-                if (one1 == null){
-                    logger.warn("问题" + one.getTitle());
-                }
-                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
-                    .and(appGoodsclass.goodsClassIdParent.isNotNull()));
-            }else {
-                logger.warn(one.getCtype());
-                one1 = zjxxCommoditytypeRepository.findOne(one.getCtype());
-                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
-                        .and(appGoodsclass.goodsClassIdParent.isNull()));
-            }
-            if (one2 == null){
-                logger.warn("这个商品有问题!!!!!!!!!!!!!!!!!!!!!"+ one.getTitle());
-            }
-            tlongGoods.setGoodsClassId(one2.getId());
+//            //TODO 设置发布人ID需要去用户表查询该用户id然后赋值
+////            tlongGoods.setPublishUserId(one.getCpeopleid());
+//            //todo 设置商品分类需要去分类表查询分类id 现在的商品有的是只属于二级分类的
+//            ZjxxCommoditytype one1;
+//            AppGoodsclass one2;
+//            logger.warn("@@@@@@@@@@@@@@@@@@@@@@@@" + one.getTitle());
+//            if (!Strings.isNullOrEmpty(one.getCltype())){
+//                logger.warn("clclclclclclclclclclc" + one.getCltype());
+//                one1 = zjxxCommoditytypeRepository.findOne(one.getCltype());
+//                ZjxxCommoditytype one3 = zjxxCommoditytypeRepository.findOne(one.getCtype());
+//                if (one1 == null){
+//                    logger.warn("问题" + one.getTitle());
+//                }
+//                AppGoodsclass one4 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one3.getTitle())
+//                    .and(appGoodsclass.goodsClassLevel.eq(1)));
+//                if (one4 == null){
+//                    logger.warn("ONE4 NULL+clclclclcl0 +" + one3.getTitle());
+//                }else{
+//                    logger.warn("@@@@@@@@@@############" + one4.getId());
+//                }
+//                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
+//                    .and(appGoodsclass.goodsClassIdParent.eq(one4.getId())));
+//            }else {
+//                logger.warn("ctctctctctctctctctc" + one.getCtype());
+//                one1 = zjxxCommoditytypeRepository.findOne(one.getCtype());
+//                one2 = appGoodsclassRepository.findOne(appGoodsclass.goodsClassName.eq(one1.getTitle())
+//                        .and(appGoodsclass.goodsClassIdParent.isNull()));
+//            }
+//            if (one2 == null){
+//                logger.warn("这个商品有问题!!!!!!!!!!!!!!!!!!!!!"+ one.getTitle());
+//            }
+//            tlongGoods.setGoodsClassId(one2.getId());
             tlongGoods.setState(one.getChecked());
             tlongGoods.setDes(one.getIntroduction());
             tlongGoods.setDes(one.getInformation());
@@ -375,6 +389,29 @@ public class MergeApplicationTests {
             newList.add(course);
         });
         courseRepository.save(newList);
+    }
+
+
+    /**
+     * 轮播图
+     */
+    @Test
+    public void findAllslideshow(){
+        List<ZjxxAd> all = zjxxAdRepository.findAll();
+        List<WebSlideshow> newList = new ArrayList<>();
+        all.stream().forEach(one ->{
+            WebSlideshow webSlideshow = new WebSlideshow();
+            webSlideshow.setContent(one.getAdcontent());
+            webSlideshow.setCurState(1);
+            webSlideshow.setIsDeleted(0);
+            webSlideshow.setName(one.getUsername());
+            webSlideshow.setPicUrl(one.getAdpicture());
+            webSlideshow.setTitle(one.getTitle());
+//            TODO 发布时间有问题
+//            webSlideshow.setPublishTime(one.getNewstime());
+            newList.add(webSlideshow);
+        });
+        webSlideshowRepository.save(newList);
     }
 
 }

@@ -165,7 +165,7 @@ public class MergeApplicationTests {
         Iterable<LongshiOrg> longshiOrgs = longshiOrgRepository.findAll(longshiOrg.isdelete.eq(0));
         List<LongshiOrg> all = ToListUtil.IterableToList(longshiOrgs);
 
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
 
 			TlongOrg tlongOrg = new TlongOrg();
 
@@ -189,7 +189,7 @@ public class MergeApplicationTests {
 			tlongOrgRepository.save(tlongOrg);
 		});
 		//下面要修正parentID
-		all.stream().forEach(one ->{
+		all.forEach(one ->{
 			if (one.getParentOrg() != null){
 				logger.info("该组织父级组织id为" + one.getParentOrg());
                 logger.info("新数据库中该机构名称为" + one.getTitle());
@@ -224,7 +224,7 @@ public class MergeApplicationTests {
     public void findAllAbout(){
         List<ZjxxAboutlongshi> all = zjxxAboutlongshiRepository.findAll();
         List<TlongAbout> newList = new ArrayList<>();
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
             TlongAbout tlongAbout = new TlongAbout();
             tlongAbout.setTitle(one.getTitle());
             tlongAbout.setContent(one.getAcontent());
@@ -310,7 +310,7 @@ public class MergeApplicationTests {
     public void findAllGoods(){
         List<ZjxxCommodity> all = zjxxCommodityRepository.findAll();
         List<TlongGoods> newList = new ArrayList<>();
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
             TlongGoods tlongGoods = new TlongGoods();
             tlongGoods.setGoodsHead(one.getTitle());
             tlongGoods.setGoodsCode(one.getNumber());
@@ -388,7 +388,7 @@ public class MergeApplicationTests {
     public void findAllClazz(){
         List<ZjxxLesson> all = zjxxLessonRepository.findAll();
         List<Course> newList = new ArrayList<>();
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
             Course course = new Course();
 //            course.setStyleId(null);
             course.setTitle(one.getTitle());
@@ -414,7 +414,7 @@ public class MergeApplicationTests {
     public void findAllslideshow(){
         List<ZjxxAd> all = zjxxAdRepository.findAll();
         List<WebSlideshow> newList = new ArrayList<>();
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
             WebSlideshow webSlideshow = new WebSlideshow();
             webSlideshow.setContent(one.getAdcontent());
             webSlideshow.setCurState(1);
@@ -436,7 +436,7 @@ public class MergeApplicationTests {
     public void findAllNews(){
         List<ZjxxNews> all = zjxxNewsRepository.findAll();
         List<WebNews> newList = new ArrayList<>();
-        all.stream().forEach(one ->{
+        all.forEach(one ->{
             WebNews webNews = new WebNews();
             webNews.setTitle(one.getTitle());
             webNews.setTitle(one.getNewsicon());
@@ -459,7 +459,7 @@ public class MergeApplicationTests {
     public void findAllEsignCompany(){
         List<TsignCompany> all = tsignCompanyRepository.findAll();
         List<EsignCompany> newList = new ArrayList<>();
-        all.stream().forEach(one -> {
+        all.forEach(one -> {
             EsignCompany esignCompany = new EsignCompany();
 //            TODO 用户id
 //            esignCompany.setUserId(one.getUserId());

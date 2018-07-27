@@ -78,6 +78,10 @@ public class MergeApplicationTests {
     private WebSlideshowRepository webSlideshowRepository;
     @Resource
     private ZjxxAdRepository zjxxAdRepository;
+    @Resource
+    private WebNewsRepository webNewsRepository;
+    @Resource
+    private ZjxxNewsRepository zjxxNewsRepository;
 
 
 	@Qualifier("entityManagerSecondary")
@@ -412,6 +416,29 @@ public class MergeApplicationTests {
             newList.add(webSlideshow);
         });
         webSlideshowRepository.save(newList);
+    }
+
+    /**
+     * 新闻
+     */
+    @Test
+    public void findAllNews(){
+        List<ZjxxNews> all = zjxxNewsRepository.findAll();
+        List<WebNews> newList = new ArrayList<>();
+        all.stream().forEach(one ->{
+            WebNews webNews = new WebNews();
+            webNews.setTitle(one.getTitle());
+            webNews.setTitle(one.getNewsicon());
+            webNews.setDes(one.getNcontent());
+            webNews.setPic(one.getNpicture());
+            webNews.setVideo(one.getNvideo());
+            webNews.setPublishName(one.getUsername());
+//            TODO 发布时间
+//            webNews.setPublishTime(one.getNewstime());
+            webNews.setIsCheck(one.getChecked());
+            newList.add(webNews);
+        });
+        webNewsRepository.save(newList);
     }
 
 }

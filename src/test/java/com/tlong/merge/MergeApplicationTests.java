@@ -82,7 +82,18 @@ public class MergeApplicationTests {
     private WebNewsRepository webNewsRepository;
     @Resource
     private ZjxxNewsRepository zjxxNewsRepository;
-
+    @Resource
+    private TsignCompanyRepository tsignCompanyRepository;
+    @Resource
+    private EsignCompanyRepository esignCompanyRepository;
+    @Resource
+    private TsignPersonRepository tsignPersonRepository;
+    @Resource
+    private EsignPersonRepository esignPersonRepository;
+    @Resource
+    private TsignHistoryRepository tsignHistoryRepository;
+    @Resource
+    private EsignRecordHistoryRepository esignRecordHistoryRepository;
 
 	@Qualifier("entityManagerSecondary")
 	@Resource
@@ -439,6 +450,80 @@ public class MergeApplicationTests {
             newList.add(webNews);
         });
         webNewsRepository.save(newList);
+    }
+
+    /**
+     * E签宝公司
+     */
+    @Test
+    public void findAllEsignCompany(){
+        List<TsignCompany> all = tsignCompanyRepository.findAll();
+        List<EsignCompany> newList = new ArrayList<>();
+        all.stream().forEach(one -> {
+            EsignCompany esignCompany = new EsignCompany();
+//            TODO 用户id
+//            esignCompany.setUserId(one.getUserId());
+            esignCompany.setCompanyName(one.getCompanyname());
+            esignCompany.setCodeOrg(one.getCodeorg());
+            esignCompany.setCodeUsc(one.getCodeusc());
+            esignCompany.setLegalName(one.getLegalname());
+            esignCompany.setLegalidNo(one.getLegalidno());
+            esignCompany.setName(one.getName());
+            esignCompany.setCardNo(one.getCardno());
+            esignCompany.setSubbranch(one.getSubbranch());
+            esignCompany.setBank(one.getBank());
+            esignCompany.setProvice(one.getProvice());
+            esignCompany.setCity(one.getCity());
+            esignCompany.setServiceId(one.getServiceid());
+            esignCompany.setTime(one.getTime());
+            esignCompany.setTimePay(one.getTimePay());
+//            老的表没有这个字段(单位类型：0-普通企业，1-社会团体，2-事业单位，3-民办非企业单位，4-党政及国家机构)
+//            esignCompany.setOrganType();
+            newList.add(esignCompany);
+        });
+        esignCompanyRepository.save(newList);
+    }
+
+    /**
+     * E签宝个人
+     */
+    @Test
+    public void findAllPerson(){
+        List<TsignPerson> all = tsignPersonRepository.findAll();
+        List<EsignPerson> newList = new ArrayList<>();
+        all.forEach(one ->{
+            EsignPerson esignPerson = new EsignPerson();
+//            TODO 用户id 数据类型   需要查表
+//            esignPerson.setUserId(one.getPeopleid());
+            esignPerson.setRealName(one.getRealname());
+            esignPerson.setIdCard(one.getIdcard());
+            esignPerson.setBank(one.getBank());
+            esignPerson.setPhone(one.getPhone());
+            esignPerson.setServiceId(one.getServiceid());
+            esignPerson.setTime(one.getTime());
+            newList.add(esignPerson);
+        });
+        esignPersonRepository.save(newList);
+    }
+
+    /**
+     * E签宝历史表
+     */
+    @Test
+    public void findAllHistory(){
+        List<TsignHistory> all = tsignHistoryRepository.findAll();
+        List<EsignRecordHistory> newList = new ArrayList<>();
+        all.forEach(one ->{
+            EsignRecordHistory esignRecordHistory = new EsignRecordHistory();
+            esignRecordHistory.setApi(one.getApi());
+            esignRecordHistory.setReqData(one.getRequest());
+            esignRecordHistory.setResData(one.getResponse());
+            esignRecordHistory.setReqTime(one.getReqtime());
+            esignRecordHistory.setResTime(one.getRestime());
+            newList.add(esignRecordHistory);
+        });
+        esignRecordHistoryRepository.save(newList);
+
     }
 
 }
